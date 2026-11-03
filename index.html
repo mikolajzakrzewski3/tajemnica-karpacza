@@ -39,7 +39,7 @@ button{font:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .mission-footer{display:flex;gap:9px;margin-top:7px}
 .mission-footer .action{font-size:14px}
 .back{background:transparent;border:1px solid #9caa97;color:#344638}
-@media(max-width:380px){.mission-card{padding:12px}.mission-footer .action{font-size:13px;padding:11px 6px}.action{font-size:14px}}
+@media(max-width:380px){.mission-card{padding:16px}.mission-footer .action{font-size:13px;padding:11px 6px}.action{font-size:14px}}
 #finishScreen{align-items:center;justify-content:center;text-align:center;padding:28px;background:linear-gradient(160deg,#245c36,#0b2018)}
 .finish-card{max-width:430px}
 .finish-card h1{font-size:32px}
@@ -100,11 +100,11 @@ button{font:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
 <script>
 const missions = [
  {name:"Mostek", image:"mostek.png", destination:"mostek nad zielonym szlakiem Karpacz", clue:"W miejscu, gdzie rzeka z drogą się krzyżuje\nZnak zielono-żółty szlak pokazuje"},
- {name:"Tama", image:"tama.png", destination:"mała tama na Łomniczce Karpacz", clue:"Tutaj kamień na kamieniu się trzyma\nSolidna konstrukcja wodę zatrzyma"},
+ {name:"Tama", image:"tama.png", destination:"kamienna tama na Łomniczce Karpacz", clue:"Tutaj kamień na kamieniu się trzyma\nSolidna konstrukcja wodę zatrzyma"},
  {name:"OSP", image:"straz.png", destination:"Ochotnicza Straż Pożarna Karpacz", clue:"Dzielna ekipa co gasi pożary\nJak trudno ich znaleźć aż nie do wiary"},
- {name:"Totem", image:"waloni.png", destination:"rzeźba Walończyków Karpacz", clue:"Czy to totem, skąd w Karpaczu Indianie?\nTo Walończycy, czas na skarbów szukanie"},
- {name:"Bobslej", image:"bobslej.png", destination:"bobslej Karpacz", clue:"Co to? Czy to wózek? Czy może sanie?\nPrzed Tobą teraz bobsleja szukanie"},
- {name:"Kościół", image:"wieza.png", destination:"kościół z kopułą Karpacz", clue:"Co to za kopuła między drzewami\nCzy zgadniesz, co góruje nad dachami"},
+ {name:"Totem", image:"waloni.png", destination:"Pomnik szlak górniczy Karpacz", clue:"Czy to totem, skąd w Karpaczu Indianie?\nTo Waloni, czas na skarbów szukanie"},
+ {name:"Bobslej", image:"bobslej.png", destination:"mizeum sportu i turystyki Karpacz", clue:"Co to? Czy to wózek? Czy może sanie?\nPrzed Tobą teraz bobsleja szukanie"},
+ {name:"Kościół", image:"wieza.png", destination:"kościół nawiedzenia nmp Karpacz", clue:"Co to za kopuła między drzewami\nCzy zgadniesz, co góruje nad dachami"},
  {name:"Biedra", image:"biedronka.png", destination:"Biedronka Karpacz centrum", clue:"Teraz już czas na ostatnie zadanie\nGdzie kupimy coś na drugie śniadanie?"}
 ];
 const STORAGE_KEY="tajemnicaKarpacza_postep_v2";
@@ -132,7 +132,7 @@ function renderMap(){
 function openMission(i){
  const active=activeIndex();
  if(i>active){return}
- if(completed.includes(i)){return}
+ const isCompleted=completed.includes(i);
  selectedIndex=i;photoReady=false;
  const m=missions[i];
  $("missionKicker").textContent=`Misja ${i+1} z 7`;
@@ -140,8 +140,11 @@ function openMission(i){
  $("missionClue").textContent=m.clue;
  $("missionImage").src=m.image;
  $("missionImage").alt=`${m.name} – zdjęcie punktu trasy`;
- $("photoStatus").textContent="";
- $("completeButton").disabled=true;
+ $("photoStatus").textContent=isCompleted?"✅ Ta misja została już ukończona.":"";
+ $("completeButton").disabled=isCompleted;
+ $("completeButton").textContent=isCompleted?"✅ Misja ukończona":"✅ Ukończ misję";
+ $("addPhotoButton").disabled=isCompleted;
+ $("navigateButton").disabled=false;
  $("photoInput").value="";
  showScreen("missionScreen");
 }
