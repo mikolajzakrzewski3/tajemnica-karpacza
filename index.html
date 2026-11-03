@@ -28,15 +28,15 @@ button{font:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .mission-card{width:min(100%,480px);background:#f7f2df;color:#26352a;border:5px solid #8c642d;border-radius:22px;padding:20px;box-shadow:0 12px 35px #0008}
 .mission-kicker{text-transform:uppercase;letter-spacing:2px;font-weight:900;font-size:11px;color:#8b632c}
 .mission-card h1{font-size:25px;line-height:1.1;margin:7px 0 12px}
-.mission-image{display:block;width:100%;height:clamp(145px,25vh,220px);object-fit:cover;border-radius:13px;margin:0 0 13px}
+.mission-image{display:block;width:100%;height:auto;aspect-ratio:1.12/1;object-fit:cover;border-radius:13px;margin:0 0 11px}
 .clue{background:#fff8df;border-left:5px solid #e4ae32;border-radius:10px;padding:14px;font-size:18px;line-height:1.5;font-weight:700;margin:12px 0;white-space:pre-line}
 .action-row{display:flex;gap:9px;margin-top:13px}
 .action{border:0;border-radius:12px;padding:12px 9px;font-weight:800;flex:1;min-width:0;font-size:15px}
 .action.primary{background:#207b3d;color:#fff}
 .action.secondary{background:#e2e8dc;color:#25392b}
 .action:disabled{opacity:.45;cursor:not-allowed}
-#photoStatus{font-size:12px;color:#5d6a5d;margin-top:6px;min-height:15px}
-.mission-footer{display:flex;gap:9px;margin-top:14px}
+#photoStatus{font-size:12px;color:#5d6a5d;margin-top:3px;min-height:0;line-height:1.2}
+.mission-footer{display:flex;gap:9px;margin-top:7px}
 .mission-footer .action{font-size:14px}
 .back{background:transparent;border:1px solid #9caa97;color:#344638}
 @media(max-width:380px){.mission-card{padding:16px}.mission-footer .action{font-size:13px;padding:11px 6px}.action{font-size:14px}}
@@ -75,14 +75,14 @@ button{font:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
     <img class="mission-image" id="missionImage" src="mostek.png" alt="Zdjęcie miejsca misji">
     <div class="clue" id="missionClue"></div>
     <div class="action-row">
-      <button class="action secondary" id="navigateButton">🧭 Nawiguj do punktu</button>
+      <button class="action secondary" id="navigateButton">🧭 Nawiguj</button>
       <button class="action secondary" id="addPhotoButton">📷 Dodaj zdjęcie</button>
     </div>
     <input id="photoInput" type="file" accept="image/*" capture="environment" hidden>
     <div id="photoStatus"></div>
     <div class="mission-footer">
       <button class="action back" id="backButton">← Wróć do mapy</button>
-      <button class="action primary" id="completeButton" disabled>Ukończ misję</button>
+      <button class="action primary" id="completeButton" disabled>✔️ Ukończ misję</button>
     </div>
   </div>
 </section>
@@ -100,13 +100,13 @@ button{font:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
 
 <script>
 const missions = [
- {name:"Mostek", image:"mostek.png", destination:"mostek nad zielonym szlakiem Karpacz", clue:"W miejscu, gdzie rzeka z drogą się krzyżuje\\nZnak zielono-żółty szlak pokazuje"},
- {name:"Tama", image:"tama.png", destination:"mała tama na Łomniczce Karpacz", clue:"Tutaj kamień na kamieniu się trzyma\\nSolidna konstrukcja wodę zatrzyma"},
- {name:"OSP", image:"straz.png", destination:"Ochotnicza Straż Pożarna Karpacz", clue:"Dzielna ekipa co gasi pożary\\nJak trudno ich znaleźć aż nie do wiary"},
- {name:"Totem", image:"waloni.png", destination:"rzeźba Walończyków Karpacz", clue:"Czy to totem, skąd w Karpaczu Indianie?\\nTo Walończycy, czas na skarbów szukanie"},
- {name:"Bobslej", image:"bobslej.png", destination:"bobslej Karpacz", clue:"Co to? Czy to wózek? Czy może sanie?\\nPrzed Tobą teraz bobsleja szukanie"},
- {name:"Kościół", image:"wieza.png", destination:"kościół z kopułą Karpacz", clue:"Co to za kopuła między drzewami\\nCzy zgadniesz, co góruje nad dachami"},
- {name:"Biedra", image:"biedronka.png", destination:"Biedronka Karpacz centrum", clue:"Teraz już czas na ostatnie zadanie\\nGdzie kupimy coś na drugie śniadanie?"}
+ {name:"Mostek", image:"mostek.png", destination:"mostek nad zielonym szlakiem Karpacz", clue:"W miejscu, gdzie rzeka z drogą się krzyżuje\nZnak zielono-żółty szlak pokazuje"},
+ {name:"Tama", image:"tama.png", destination:"mała tama na Łomniczce Karpacz", clue:"Tutaj kamień na kamieniu się trzyma\nSolidna konstrukcja wodę zatrzyma"},
+ {name:"OSP", image:"straz.png", destination:"Ochotnicza Straż Pożarna Karpacz", clue:"Dzielna ekipa co gasi pożary\nJak trudno ich znaleźć aż nie do wiary"},
+ {name:"Totem", image:"waloni.png", destination:"rzeźba Walończyków Karpacz", clue:"Czy to totem, skąd w Karpaczu Indianie?\nTo Walończycy, czas na skarbów szukanie"},
+ {name:"Bobslej", image:"bobslej.png", destination:"bobslej Karpacz", clue:"Co to? Czy to wózek? Czy może sanie?\nPrzed Tobą teraz bobsleja szukanie"},
+ {name:"Kościół", image:"wieza.png", destination:"kościół z kopułą Karpacz", clue:"Co to za kopuła między drzewami\nCzy zgadniesz, co góruje nad dachami"},
+ {name:"Biedra", image:"biedronka.png", destination:"Biedronka Karpacz centrum", clue:"Teraz już czas na ostatnie zadanie\nGdzie kupimy coś na drugie śniadanie?"}
 ];
 const STORAGE_KEY="tajemnicaKarpacza_postep_v2";
 let completed=[];
@@ -157,7 +157,8 @@ $("startButton").addEventListener("click",()=>{renderMap();showScreen("mapScreen
 document.querySelectorAll(".hotspot").forEach(btn=>btn.addEventListener("click",()=>openMission(Number(btn.dataset.point))));
 $("navigateButton").addEventListener("click",()=>{
  const destination=encodeURIComponent(missions[selectedIndex].destination);
- window.open(`https://www.google.com/maps/search/?api=1&query=${destination}`,"_blank");
+ const url=`https://www.google.com/maps/dir/?api=1&destination=${destination}&travelmode=walking`;
+ window.location.href=url;
 });
 $("addPhotoButton").addEventListener("click",()=>$("photoInput").click());
 $("photoInput").addEventListener("change",acceptPhoto);
