@@ -15,9 +15,9 @@ button{font:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
 #startScreen{position:relative;min-height:100svh;background:#183c28 url("tlo.png") center center/cover no-repeat}
 #startButton{position:absolute;left:50%;top:79.5%;transform:translate(-50%,-50%);width:70%;height:12%;border:0;border-radius:14px;background:transparent}
 #startButton:focus-visible,.hotspot:focus-visible{outline:4px solid #fff;outline-offset:3px}
-#mapScreen{align-items:center;justify-content:center;position:relative;background:#102719;padding:8px 0 42px;overflow:hidden;min-height:100svh}
-.map-frame{position:relative;width:min(100vw, calc((100svh - 58px) * 2 / 3));max-width:100%;line-height:0;flex:0 1 auto}
-.map-frame img{display:block;width:100%;height:auto;max-height:calc(100svh - 58px);object-fit:contain}
+#mapScreen{align-items:stretch;justify-content:center;position:relative;background:#102719;padding:0;overflow:hidden;height:100svh;min-height:100svh}
+.map-frame{position:relative;width:100vw;height:100svh;max-width:100%;line-height:0;flex:0 0 100%}
+.map-frame img{display:block;width:100%;height:100%;object-fit:cover;object-position:center}
 .hotspot{position:absolute;transform:translate(-50%,-50%);width:11%;aspect-ratio:1;border:0;border-radius:50%;background:transparent;z-index:2}
 .hotspot.active{box-shadow:inset 0 0 0 2px #f5c84b;background:#f5c84b12}
 .hotspot.done{box-shadow:inset 0 0 0 4px #39d66f,0 0 0 2px #123c25;background:#20b95755}
@@ -65,7 +65,6 @@ button{font:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
     <button class="hotspot" data-point="5" style="left:38.5%;top:69.6%" aria-label="Punkt 6"></button>
     <button class="hotspot" data-point="6" style="left:55.2%;top:82.5%" aria-label="Punkt 7"></button>
   </div>
-  <div class="map-hint" id="mapHint">Zielony ✓ = ukończona misja · Szary = do wykonania</div>
 </section>
 
 <section id="missionScreen" class="screen" aria-label="Misja">
@@ -128,12 +127,12 @@ function renderMap(){
   btn.classList.add(completed.includes(i)?"done":i===active?"active":"locked");
   btn.setAttribute("aria-label",`Punkt ${i+1}: ${completed.includes(i)?"ukończony":i===active?"aktywny":"zablokowany"}`);
  });
- $("mapHint").textContent=active>=7?"Wszystkie punkty zdobyte!":`✓ Ukończone: ${completed.length} / 7 · Szare: do wykonania`;
+
 }
 function openMission(i){
  const active=activeIndex();
- if(i>active){$("mapHint").textContent="🔒 Najpierw ukończ poprzednią misję!";return}
- if(completed.includes(i)){$("mapHint").textContent="✓ Ta misja jest już ukończona.";return}
+ if(i>active){return}
+ if(completed.includes(i)){return}
  selectedIndex=i;photoReady=false;
  const m=missions[i];
  $("missionKicker").textContent=`Misja ${i+1} z 7`;
@@ -167,7 +166,7 @@ $("completeButton").addEventListener("click",()=>{
  completed.push(selectedIndex);saveProgress();
  if(activeIndex()>=7){showScreen("finishScreen");return}
  renderMap();showScreen("mapScreen");
- $("mapHint").textContent=`✓ Misja ${selectedIndex+1} ukończona! Zielona odznaka oznacza wykonany punkt.`;
+
 });
 $("backButton").addEventListener("click",()=>{renderMap();showScreen("mapScreen")});
 $("finishMapButton").addEventListener("click",()=>{renderMap();showScreen("mapScreen")});
