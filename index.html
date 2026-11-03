@@ -3,57 +3,172 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#1d5d2b">
-<title>KARPACZ – START</title>
+<meta name="theme-color" content="#173b2a">
+<title>Tajemnica Karpacza</title>
 <style>
-  * { box-sizing: border-box; }
-  html, body { margin: 0; width: 100%; height: 100%; }
-  body { overflow: hidden; background: #183c28; font-family: system-ui, sans-serif; }
-  .start-screen {
-    position: relative;
-    width: 100%;
-    height: 100vh;
-    height: 100svh;
-    overflow: hidden;
-    background-image: url("tlo.png");
-    background-size: cover;
-    background-position: center center;
-    background-repeat: no-repeat;
-  }
-  /* Przezroczysty obszar dokładnie nad zielonym przyciskiem z grafiki. */
-  .start-button {
-    position: absolute;
-    left: 50%;
-    top: 79.5%;
-    transform: translate(-50%, -50%);
-    width: 66%;
-    height: 12%;
-    border: 0;
-    border-radius: 12px;
-    background: transparent;
-    cursor: pointer;
-    -webkit-tap-highlight-color: transparent;
-  }
-  .start-button:focus-visible {
-    outline: 4px solid white;
-    outline-offset: 4px;
-  }
-  @media (max-aspect-ratio: 5/8) {
-    .start-screen { background-position: center center; }
-    .start-button { width: 70%; top: 79.5%; height: 12%; }
-  }
+:root{--gold:#ffd34e;--green:#218b43;--dark:#14251d}
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;min-height:100%;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#102719;color:#fff}
+button{font:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.screen{display:none;min-height:100svh}
+.screen.active{display:flex}
+#startScreen{position:relative;min-height:100svh;background:#183c28 url("tlo.png") center center/cover no-repeat}
+#startButton{position:absolute;left:50%;top:79.5%;transform:translate(-50%,-50%);width:70%;height:12%;border:0;border-radius:14px;background:transparent}
+#startButton:focus-visible,.hotspot:focus-visible{outline:4px solid #fff;outline-offset:3px}
+#mapScreen{align-items:center;justify-content:center;position:relative;background:#102719;padding:0;overflow:auto}
+.map-frame{position:relative;width:min(100vw,66.6667vh);max-width:100%;line-height:0}
+.map-frame img{display:block;width:100%;height:auto}
+.hotspot{position:absolute;transform:translate(-50%,-50%);width:12%;aspect-ratio:1;border:0;border-radius:50%;background:transparent;z-index:2}
+.hotspot.active{box-shadow:0 0 0 4px #ffe45c,0 0 24px 10px #ffdc38;background:#ffdf3630}
+.hotspot.done{box-shadow:0 0 0 4px #46e47a,0 0 16px 6px #35db6b;background:#35db6b25}
+.hotspot.locked{cursor:not-allowed}
+.map-hint{position:fixed;z-index:5;left:50%;bottom:max(10px,env(safe-area-inset-bottom));transform:translateX(-50%);background:#10251deF;border:1px solid #ffffff55;border-radius:999px;padding:9px 15px;font-size:12px;white-space:nowrap;box-shadow:0 4px 18px #0006}
+#missionScreen{align-items:center;justify-content:center;padding:22px 16px;background:linear-gradient(160deg,#173d2b,#0b2018);overflow:auto}
+.mission-card{width:min(100%,480px);background:#f7f2df;color:#26352a;border:5px solid #8c642d;border-radius:22px;padding:20px;box-shadow:0 12px 35px #0008}
+.mission-kicker{text-transform:uppercase;letter-spacing:2px;font-weight:900;font-size:11px;color:#8b632c}
+.mission-card h1{font-size:25px;line-height:1.1;margin:7px 0 14px}
+.clue{background:#fff8df;border-left:5px solid #e4ae32;border-radius:10px;padding:14px;font-size:18px;line-height:1.5;font-weight:700;margin:14px 0}
+.task{font-size:14px;line-height:1.45;color:#47564b}
+.upload-row{display:flex;gap:9px;flex-wrap:wrap;margin-top:16px}
+.action{border:0;border-radius:12px;padding:13px 15px;font-weight:800;flex:1;min-width:130px}
+.action.primary{background:#207b3d;color:#fff}
+.action.secondary{background:#e2e8dc;color:#25392b}
+.action:disabled{opacity:.45;cursor:not-allowed}
+#photoStatus{font-size:12px;color:#5d6a5d;margin-top:10px;min-height:18px}
+.back{display:block;width:100%;margin-top:12px;background:transparent;border:1px solid #9caa97;color:#344638;border-radius:12px;padding:11px;font-weight:700}
+#finishScreen{align-items:center;justify-content:center;text-align:center;padding:28px;background:linear-gradient(160deg,#245c36,#0b2018)}
+.finish-card{max-width:430px}
+.finish-card h1{font-size:32px}
+.finish-card p{line-height:1.6}
+.reset{position:fixed;top:8px;right:8px;z-index:8;border:1px solid #ffffff55;background:#10251dbb;color:#fff;border-radius:20px;padding:7px 10px;font-size:11px}
+@media(min-width:700px){#mapScreen{padding:16px}.map-frame{border-radius:14px;overflow:hidden;box-shadow:0 10px 40px #0008}.map-hint{bottom:18px}}
 </style>
 </head>
 <body>
-  <main class="start-screen" aria-label="Ekran startowy Karpacz">
-    <button class="start-button" type="button" aria-label="Start"
-      onclick="startGame()"></button>
-  </main>
-  <script>
-    function startGame() {
-      // W kolejnym kroku podłączymy tutaj pierwszy punkt gry.
-      alert("Ruszamy na przygodę!");
-    }
-  </script>
+<section id="startScreen" class="screen active" aria-label="Ekran startowy">
+  <button id="startButton" aria-label="Start"></button>
+</section>
+
+<section id="mapScreen" class="screen" aria-label="Mapa przygody">
+  <div class="map-frame">
+    <img src="mapa.png" alt="Mapa przygody w Karpaczu z siedmioma punktami trasy">
+    <!-- Pozycje punktów dopasowane do numerów na grafice mapa.png -->
+    <button class="hotspot" data-point="0" style="left:66.1%;top:27.1%" aria-label="Punkt 1"></button>
+    <button class="hotspot" data-point="1" style="left:36.3%;top:32.6%" aria-label="Punkt 2"></button>
+    <button class="hotspot" data-point="2" style="left:63.8%;top:40.4%" aria-label="Punkt 3"></button>
+    <button class="hotspot" data-point="3" style="left:30.3%;top:47.6%" aria-label="Punkt 4"></button>
+    <button class="hotspot" data-point="4" style="left:69.5%;top:55.0%" aria-label="Punkt 5"></button>
+    <button class="hotspot" data-point="5" style="left:39.8%;top:64.3%" aria-label="Punkt 6"></button>
+    <button class="hotspot" data-point="6" style="left:55.7%;top:75.3%" aria-label="Punkt 7"></button>
+  </div>
+  <div class="map-hint" id="mapHint">Dotknij świecącego punktu, aby rozpocząć misję 1</div>
+</section>
+
+<section id="missionScreen" class="screen" aria-label="Misja">
+  <div class="mission-card">
+    <div class="mission-kicker" id="missionKicker">Misja 1 z 7</div>
+    <h1 id="missionTitle">Mostek</h1>
+    <div class="clue" id="missionClue"></div>
+    <p class="task" id="missionTask"></p>
+    <div class="upload-row">
+      <button class="action secondary" id="cameraButton">📷 Zrób zdjęcie</button>
+      <button class="action secondary" id="galleryButton">🖼️ Wybierz zdjęcie</button>
+    </div>
+    <input id="cameraInput" type="file" accept="image/*" capture="environment" hidden>
+    <input id="galleryInput" type="file" accept="image/*" hidden>
+    <div id="photoStatus">Dodaj zdjęcie, aby potwierdzić wykonanie zadania.</div>
+    <button class="action primary" id="completeButton" disabled>Ukończ misję</button>
+    <button class="back" id="backButton">← Wróć do mapy</button>
+  </div>
+</section>
+
+<section id="finishScreen" class="screen">
+  <div class="finish-card">
+    <div style="font-size:64px">🏆</div>
+    <h1>Wyprawa ukończona!</h1>
+    <p>Wszystkie 7 punktów odkryte. Brawo, odkrywco! Tajemnica Karpacza rozwiązana!</p>
+    <button class="action primary" id="finishMapButton">Zobacz mapę</button>
+  </div>
+</section>
+
+<button class="reset" id="resetButton" title="Wyczyść postęp">Reset</button>
+
+<script>
+const missions = [
+ {name:"Mostek", clue:"W miejscu, gdzie rzeka z drogą się krzyżuje\nZnak zielono-żółty szlak pokazuje", task:"Odnajdź mostek i wykonaj zadanie. Gdy skończysz, dodaj zdjęcie miejsca."},
+ {name:"Tama", clue:"Tutaj kamień na kamieniu się trzyma\nSolidna konstrukcja wodę zatrzyma", task:"Odszukaj niewielką kamienną tamę na Łomniczce. Obejrzyj ją z bezpiecznego miejsca i dodaj zdjęcie."},
+ {name:"OSP", clue:"Dzielna ekipa co gasi pożary\nJak trudno ich znaleźć aż nie do wiary", task:"Odszukaj remizę Ochotniczej Straży Pożarnej i dodaj zdjęcie."},
+ {name:"Totem", clue:"Czy to totem, skąd w Karpaczu Indianie?\nTo Walończycy, czas na skarbów szukanie", task:"Odszukaj drewnianą rzeźbę Walończyków i dodaj zdjęcie."},
+ {name:"Bobslej", clue:"Co to? Czy to wózek? Czy może sanie?\nPrzed Tobą teraz bobsleja szukanie", task:"Odszukaj bobslej i dodaj zdjęcie."},
+ {name:"Kościół", clue:"Co to za kopuła między drzewami\nCzy zgadniesz, co góruje nad dachami", task:"Odszukaj kościół z charakterystyczną kopułą i dodaj zdjęcie."},
+ {name:"Biedra", clue:"Teraz już czas na ostatnie zadanie\nGdzie kupimy coś na drugie śniadanie?", task:"Dotarliście do mety! Odbierz nagrodę od opiekuna i dodaj pamiątkowe zdjęcie."}
+];
+const STORAGE_KEY="tajemnicaKarpacza_postep_v2";
+let completed=[];
+let selectedIndex=0;
+let photoReady=false;
+const $=id=>document.getElementById(id);
+function loadProgress(){
+ try { const saved=JSON.parse(localStorage.getItem(STORAGE_KEY)||"[]"); completed=Array.isArray(saved)?saved.filter(n=>Number.isInteger(n)&&n>=0&&n<7):[]; }
+ catch(e){completed=[]}
+}
+function saveProgress(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(completed))}catch(e){}}
+function activeIndex(){let i=0;while(i<7&&completed.includes(i))i++;return i}
+function showScreen(id){document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));$(id).classList.add("active");window.scrollTo(0,0)}
+function renderMap(){
+ const active=activeIndex();
+ document.querySelectorAll(".hotspot").forEach(btn=>{
+  const i=Number(btn.dataset.point);
+  btn.classList.remove("active","done","locked");
+  btn.classList.add(completed.includes(i)?"done":i===active?"active":"locked");
+  btn.setAttribute("aria-label",`Punkt ${i+1}: ${completed.includes(i)?"ukończony":i===active?"aktywny":"zablokowany"}`);
+ });
+ $("mapHint").textContent=active>=7?"Wszystkie punkty zdobyte!":`Ukończono ${completed.length} z 7 · Aktywna misja ${active+1}`;
+}
+function openMission(i){
+ const active=activeIndex();
+ if(i>active){$("mapHint").textContent="🔒 Najpierw ukończ poprzednią misję!";return}
+ if(completed.includes(i)){$("mapHint").textContent="✓ Ta misja jest już ukończona.";return}
+ selectedIndex=i;photoReady=false;
+ const m=missions[i];
+ $("missionKicker").textContent=`Misja ${i+1} z 7`;
+ $("missionTitle").textContent=m.name;
+ $("missionClue").textContent=m.clue;
+ $("missionTask").textContent=m.task;
+ $("photoStatus").textContent="Dodaj zdjęcie, aby potwierdzić wykonanie zadania.";
+ $("completeButton").disabled=true;
+ $("completeButton").textContent="Ukończ misję";
+ $("cameraInput").value="";$("galleryInput").value="";
+ showScreen("missionScreen");
+}
+function acceptPhoto(event){
+ const file=event.target.files&&event.target.files[0];if(!file)return;
+ if(!file.type.startsWith("image/")){$("photoStatus").textContent="Wybierz plik zdjęcia.";return}
+ photoReady=true;
+ $("photoStatus").textContent="📸 Zdjęcie dodane: "+file.name;
+ $("completeButton").disabled=false;
+}
+$("startButton").addEventListener("click",()=>{renderMap();showScreen("mapScreen")});
+document.querySelectorAll(".hotspot").forEach(btn=>btn.addEventListener("click",()=>openMission(Number(btn.dataset.point))));
+$("cameraButton").addEventListener("click",()=>$("cameraInput").click());
+$("galleryButton").addEventListener("click",()=>$("galleryInput").click());
+$("cameraInput").addEventListener("change",acceptPhoto);
+$("galleryInput").addEventListener("change",acceptPhoto);
+$("completeButton").addEventListener("click",()=>{
+ if(!photoReady||selectedIndex!==activeIndex())return;
+ completed.push(selectedIndex);saveProgress();
+ if(activeIndex()>=7){showScreen("finishScreen");return}
+ renderMap();showScreen("mapScreen");
+ $("mapHint").textContent=`✓ Misja ${selectedIndex+1} ukończona! Odblokowano misję ${activeIndex()+1}.`;
+});
+$("backButton").addEventListener("click",()=>{renderMap();showScreen("mapScreen")});
+$("finishMapButton").addEventListener("click",()=>{renderMap();showScreen("mapScreen")});
+$("resetButton").addEventListener("click",()=>{
+ if(confirm("Czy na pewno wyzerować postęp i zablokować ponownie misje 2–7?")){
+  completed=[];saveProgress();renderMap();showScreen("startScreen");
+ }
+});
+loadProgress();
+</script>
 </body>
 </html>
