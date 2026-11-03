@@ -15,27 +15,31 @@ button{font:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
 #startScreen{position:relative;min-height:100svh;background:#183c28 url("tlo.png") center center/cover no-repeat}
 #startButton{position:absolute;left:50%;top:79.5%;transform:translate(-50%,-50%);width:70%;height:12%;border:0;border-radius:14px;background:transparent}
 #startButton:focus-visible,.hotspot:focus-visible{outline:4px solid #fff;outline-offset:3px}
-#mapScreen{align-items:center;justify-content:center;position:relative;background:#102719;padding:0;overflow:auto}
-.map-frame{position:relative;width:min(100vw,66.6667vh);max-width:100%;line-height:0}
-.map-frame img{display:block;width:100%;height:auto}
-.hotspot{position:absolute;transform:translate(-50%,-50%);width:12%;aspect-ratio:1;border:0;border-radius:50%;background:transparent;z-index:2}
-.hotspot.active{box-shadow:0 0 0 4px #ffe45c,0 0 24px 10px #ffdc38;background:#ffdf3630}
-.hotspot.done{box-shadow:0 0 0 4px #46e47a,0 0 16px 6px #35db6b;background:#35db6b25}
-.hotspot.locked{cursor:not-allowed}
+#mapScreen{align-items:center;justify-content:center;position:relative;background:#102719;padding:8px 0 42px;overflow:hidden;min-height:100svh}
+.map-frame{position:relative;width:min(100vw, calc((100svh - 58px) * 2 / 3));max-width:100%;line-height:0;flex:0 1 auto}
+.map-frame img{display:block;width:100%;height:auto;max-height:calc(100svh - 58px);object-fit:contain}
+.hotspot{position:absolute;transform:translate(-50%,-50%);width:11%;aspect-ratio:1;border:0;border-radius:50%;background:transparent;z-index:2}
+.hotspot.active{box-shadow:inset 0 0 0 2px #f5c84b;background:#f5c84b12}
+.hotspot.done{box-shadow:inset 0 0 0 4px #39d66f,0 0 0 2px #123c25;background:#20b95755}
+.hotspot.done::after{content:"✓";position:absolute;right:-8%;top:-8%;width:43%;height:43%;border-radius:50%;display:grid;place-items:center;background:#20a84d;color:white;border:2px solid #eaffef;font-size:clamp(12px,3.5vw,22px);font-weight:1000;line-height:1;box-shadow:0 2px 6px #0008}
+.hotspot.locked{cursor:not-allowed;filter:grayscale(.35);opacity:.72}
 .map-hint{position:fixed;z-index:5;left:50%;bottom:max(10px,env(safe-area-inset-bottom));transform:translateX(-50%);background:#10251deF;border:1px solid #ffffff55;border-radius:999px;padding:9px 15px;font-size:12px;white-space:nowrap;box-shadow:0 4px 18px #0006}
 #missionScreen{align-items:center;justify-content:center;padding:22px 16px;background:linear-gradient(160deg,#173d2b,#0b2018);overflow:auto}
 .mission-card{width:min(100%,480px);background:#f7f2df;color:#26352a;border:5px solid #8c642d;border-radius:22px;padding:20px;box-shadow:0 12px 35px #0008}
 .mission-kicker{text-transform:uppercase;letter-spacing:2px;font-weight:900;font-size:11px;color:#8b632c}
-.mission-card h1{font-size:25px;line-height:1.1;margin:7px 0 14px}
-.clue{background:#fff8df;border-left:5px solid #e4ae32;border-radius:10px;padding:14px;font-size:18px;line-height:1.5;font-weight:700;margin:14px 0}
-.task{font-size:14px;line-height:1.45;color:#47564b}
-.upload-row{display:flex;gap:9px;flex-wrap:wrap;margin-top:16px}
-.action{border:0;border-radius:12px;padding:13px 15px;font-weight:800;flex:1;min-width:130px}
+.mission-card h1{font-size:25px;line-height:1.1;margin:7px 0 12px}
+.mission-image{display:block;width:100%;height:clamp(145px,25vh,220px);object-fit:cover;border-radius:13px;margin:0 0 13px}
+.clue{background:#fff8df;border-left:5px solid #e4ae32;border-radius:10px;padding:14px;font-size:18px;line-height:1.5;font-weight:700;margin:12px 0;white-space:pre-line}
+.action-row{display:flex;gap:9px;margin-top:13px}
+.action{border:0;border-radius:12px;padding:12px 9px;font-weight:800;flex:1;min-width:0;font-size:15px}
 .action.primary{background:#207b3d;color:#fff}
 .action.secondary{background:#e2e8dc;color:#25392b}
 .action:disabled{opacity:.45;cursor:not-allowed}
-#photoStatus{font-size:12px;color:#5d6a5d;margin-top:10px;min-height:18px}
-.back{display:block;width:100%;margin-top:12px;background:transparent;border:1px solid #9caa97;color:#344638;border-radius:12px;padding:11px;font-weight:700}
+#photoStatus{font-size:12px;color:#5d6a5d;margin-top:6px;min-height:15px}
+.mission-footer{display:flex;gap:9px;margin-top:14px}
+.mission-footer .action{font-size:14px}
+.back{background:transparent;border:1px solid #9caa97;color:#344638}
+@media(max-width:380px){.mission-card{padding:16px}.mission-footer .action{font-size:13px;padding:11px 6px}.action{font-size:14px}}
 #finishScreen{align-items:center;justify-content:center;text-align:center;padding:28px;background:linear-gradient(160deg,#245c36,#0b2018)}
 .finish-card{max-width:430px}
 .finish-card h1{font-size:32px}
@@ -53,32 +57,33 @@ button{font:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
   <div class="map-frame">
     <img src="mapa.png" alt="Mapa przygody w Karpaczu z siedmioma punktami trasy">
     <!-- Pozycje punktów dopasowane do numerów na grafice mapa.png -->
-    <button class="hotspot" data-point="0" style="left:66.1%;top:27.1%" aria-label="Punkt 1"></button>
-    <button class="hotspot" data-point="1" style="left:36.3%;top:32.6%" aria-label="Punkt 2"></button>
-    <button class="hotspot" data-point="2" style="left:63.8%;top:40.4%" aria-label="Punkt 3"></button>
-    <button class="hotspot" data-point="3" style="left:30.3%;top:47.6%" aria-label="Punkt 4"></button>
-    <button class="hotspot" data-point="4" style="left:69.5%;top:55.0%" aria-label="Punkt 5"></button>
-    <button class="hotspot" data-point="5" style="left:39.8%;top:64.3%" aria-label="Punkt 6"></button>
-    <button class="hotspot" data-point="6" style="left:55.7%;top:75.3%" aria-label="Punkt 7"></button>
+    <button class="hotspot" data-point="0" style="left:64.7%;top:29.1%" aria-label="Punkt 1"></button>
+    <button class="hotspot" data-point="1" style="left:34.7%;top:35.5%" aria-label="Punkt 2"></button>
+    <button class="hotspot" data-point="2" style="left:61.9%;top:44.1%" aria-label="Punkt 3"></button>
+    <button class="hotspot" data-point="3" style="left:29.5%;top:52.0%" aria-label="Punkt 4"></button>
+    <button class="hotspot" data-point="4" style="left:67.1%;top:59.2%" aria-label="Punkt 5"></button>
+    <button class="hotspot" data-point="5" style="left:38.5%;top:69.6%" aria-label="Punkt 6"></button>
+    <button class="hotspot" data-point="6" style="left:55.2%;top:82.5%" aria-label="Punkt 7"></button>
   </div>
-  <div class="map-hint" id="mapHint">Dotknij świecącego punktu, aby rozpocząć misję 1</div>
+  <div class="map-hint" id="mapHint">Zielony ✓ = ukończona misja · Szary = do wykonania</div>
 </section>
 
 <section id="missionScreen" class="screen" aria-label="Misja">
   <div class="mission-card">
     <div class="mission-kicker" id="missionKicker">Misja 1 z 7</div>
     <h1 id="missionTitle">Mostek</h1>
+    <img class="mission-image" id="missionImage" src="mostek.png" alt="Zdjęcie miejsca misji">
     <div class="clue" id="missionClue"></div>
-    <p class="task" id="missionTask"></p>
-    <div class="upload-row">
-      <button class="action secondary" id="cameraButton">📷 Zrób zdjęcie</button>
-      <button class="action secondary" id="galleryButton">🖼️ Wybierz zdjęcie</button>
+    <div class="action-row">
+      <button class="action secondary" id="navigateButton">🧭 Nawiguj do punktu</button>
+      <button class="action secondary" id="addPhotoButton">📷 Dodaj zdjęcie</button>
     </div>
-    <input id="cameraInput" type="file" accept="image/*" capture="environment" hidden>
-    <input id="galleryInput" type="file" accept="image/*" hidden>
-    <div id="photoStatus">Dodaj zdjęcie, aby potwierdzić wykonanie zadania.</div>
-    <button class="action primary" id="completeButton" disabled>Ukończ misję</button>
-    <button class="back" id="backButton">← Wróć do mapy</button>
+    <input id="photoInput" type="file" accept="image/*" capture="environment" hidden>
+    <div id="photoStatus"></div>
+    <div class="mission-footer">
+      <button class="action back" id="backButton">← Wróć do mapy</button>
+      <button class="action primary" id="completeButton" disabled>Ukończ misję</button>
+    </div>
   </div>
 </section>
 
@@ -95,13 +100,13 @@ button{font:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
 
 <script>
 const missions = [
- {name:"Mostek", clue:"W miejscu, gdzie rzeka z drogą się krzyżuje\nZnak zielono-żółty szlak pokazuje", task:"Odnajdź mostek i wykonaj zadanie. Gdy skończysz, dodaj zdjęcie miejsca."},
- {name:"Tama", clue:"Tutaj kamień na kamieniu się trzyma\nSolidna konstrukcja wodę zatrzyma", task:"Odszukaj niewielką kamienną tamę na Łomniczce. Obejrzyj ją z bezpiecznego miejsca i dodaj zdjęcie."},
- {name:"OSP", clue:"Dzielna ekipa co gasi pożary\nJak trudno ich znaleźć aż nie do wiary", task:"Odszukaj remizę Ochotniczej Straży Pożarnej i dodaj zdjęcie."},
- {name:"Totem", clue:"Czy to totem, skąd w Karpaczu Indianie?\nTo Walończycy, czas na skarbów szukanie", task:"Odszukaj drewnianą rzeźbę Walończyków i dodaj zdjęcie."},
- {name:"Bobslej", clue:"Co to? Czy to wózek? Czy może sanie?\nPrzed Tobą teraz bobsleja szukanie", task:"Odszukaj bobslej i dodaj zdjęcie."},
- {name:"Kościół", clue:"Co to za kopuła między drzewami\nCzy zgadniesz, co góruje nad dachami", task:"Odszukaj kościół z charakterystyczną kopułą i dodaj zdjęcie."},
- {name:"Biedra", clue:"Teraz już czas na ostatnie zadanie\nGdzie kupimy coś na drugie śniadanie?", task:"Dotarliście do mety! Odbierz nagrodę od opiekuna i dodaj pamiątkowe zdjęcie."}
+ {name:"Mostek", image:"mostek.png", destination:"mostek nad zielonym szlakiem Karpacz", clue:"W miejscu, gdzie rzeka z drogą się krzyżuje\\nZnak zielono-żółty szlak pokazuje"},
+ {name:"Tama", image:"tama.png", destination:"mała tama na Łomniczce Karpacz", clue:"Tutaj kamień na kamieniu się trzyma\\nSolidna konstrukcja wodę zatrzyma"},
+ {name:"OSP", image:"straz.png", destination:"Ochotnicza Straż Pożarna Karpacz", clue:"Dzielna ekipa co gasi pożary\\nJak trudno ich znaleźć aż nie do wiary"},
+ {name:"Totem", image:"waloni.png", destination:"rzeźba Walończyków Karpacz", clue:"Czy to totem, skąd w Karpaczu Indianie?\\nTo Walończycy, czas na skarbów szukanie"},
+ {name:"Bobslej", image:"bobslej.png", destination:"bobslej Karpacz", clue:"Co to? Czy to wózek? Czy może sanie?\\nPrzed Tobą teraz bobsleja szukanie"},
+ {name:"Kościół", image:"wieza.png", destination:"kościół z kopułą Karpacz", clue:"Co to za kopuła między drzewami\\nCzy zgadniesz, co góruje nad dachami"},
+ {name:"Biedra", image:"biedronka.png", destination:"Biedronka Karpacz centrum", clue:"Teraz już czas na ostatnie zadanie\\nGdzie kupimy coś na drugie śniadanie?"}
 ];
 const STORAGE_KEY="tajemnicaKarpacza_postep_v2";
 let completed=[];
@@ -123,7 +128,7 @@ function renderMap(){
   btn.classList.add(completed.includes(i)?"done":i===active?"active":"locked");
   btn.setAttribute("aria-label",`Punkt ${i+1}: ${completed.includes(i)?"ukończony":i===active?"aktywny":"zablokowany"}`);
  });
- $("mapHint").textContent=active>=7?"Wszystkie punkty zdobyte!":`Ukończono ${completed.length} z 7 · Aktywna misja ${active+1}`;
+ $("mapHint").textContent=active>=7?"Wszystkie punkty zdobyte!":`✓ Ukończone: ${completed.length} / 7 · Szare: do wykonania`;
 }
 function openMission(i){
  const active=activeIndex();
@@ -134,32 +139,34 @@ function openMission(i){
  $("missionKicker").textContent=`Misja ${i+1} z 7`;
  $("missionTitle").textContent=m.name;
  $("missionClue").textContent=m.clue;
- $("missionTask").textContent=m.task;
- $("photoStatus").textContent="Dodaj zdjęcie, aby potwierdzić wykonanie zadania.";
+ $("missionImage").src=m.image;
+ $("missionImage").alt=`${m.name} – zdjęcie punktu trasy`;
+ $("photoStatus").textContent="";
  $("completeButton").disabled=true;
- $("completeButton").textContent="Ukończ misję";
- $("cameraInput").value="";$("galleryInput").value="";
+ $("photoInput").value="";
  showScreen("missionScreen");
 }
 function acceptPhoto(event){
  const file=event.target.files&&event.target.files[0];if(!file)return;
  if(!file.type.startsWith("image/")){$("photoStatus").textContent="Wybierz plik zdjęcia.";return}
  photoReady=true;
- $("photoStatus").textContent="📸 Zdjęcie dodane: "+file.name;
+ $("photoStatus").textContent="✓ Zdjęcie dodane";
  $("completeButton").disabled=false;
 }
 $("startButton").addEventListener("click",()=>{renderMap();showScreen("mapScreen")});
 document.querySelectorAll(".hotspot").forEach(btn=>btn.addEventListener("click",()=>openMission(Number(btn.dataset.point))));
-$("cameraButton").addEventListener("click",()=>$("cameraInput").click());
-$("galleryButton").addEventListener("click",()=>$("galleryInput").click());
-$("cameraInput").addEventListener("change",acceptPhoto);
-$("galleryInput").addEventListener("change",acceptPhoto);
+$("navigateButton").addEventListener("click",()=>{
+ const destination=encodeURIComponent(missions[selectedIndex].destination);
+ window.open(`https://www.google.com/maps/search/?api=1&query=${destination}`,"_blank");
+});
+$("addPhotoButton").addEventListener("click",()=>$("photoInput").click());
+$("photoInput").addEventListener("change",acceptPhoto);
 $("completeButton").addEventListener("click",()=>{
  if(!photoReady||selectedIndex!==activeIndex())return;
  completed.push(selectedIndex);saveProgress();
  if(activeIndex()>=7){showScreen("finishScreen");return}
  renderMap();showScreen("mapScreen");
- $("mapHint").textContent=`✓ Misja ${selectedIndex+1} ukończona! Odblokowano misję ${activeIndex()+1}.`;
+ $("mapHint").textContent=`✓ Misja ${selectedIndex+1} ukończona! Zielona odznaka oznacza wykonany punkt.`;
 });
 $("backButton").addEventListener("click",()=>{renderMap();showScreen("mapScreen")});
 $("finishMapButton").addEventListener("click",()=>{renderMap();showScreen("mapScreen")});
